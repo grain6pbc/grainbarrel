@@ -1,0 +1,48 @@
+{:paths ["src" "scripts"]
+ 
+ :deps
+ {org.clojure/clojure {:mvn/version "1.11.1"}}
+ 
+ :tasks
+ {;; Grainstore Management
+  grainstore:validate
+  {:doc "Validate grainstore.edn manifest"
+   :task (shell "bb scripts/grainstore-validate.bb")}
+  
+  grainstore:generate-docs
+  {:doc "Generate documentation from grainstore.edn (EXTERNAL-DEPENDENCIES.md, MODULES.md, DEPENDENCY-GRAPH.md)"
+   :task (shell "bb scripts/grainstore-generate-docs.bb")}
+  
+  grainstore:list
+  {:doc "List all grainstore modules"
+   :requires ([clojure.edn :as edn])
+   :task (let [manifest (-> "grainstore/grainstore.edn" slurp edn/read-string)
+               modules (-> manifest :grainstore :modules)]
+           (println "🌾 Grainstore Modules\n")
+           (doseq [[k v] (sort-by first modules)]
+             (println (str "  " (name k) ": " (:description v)))))}
+  
+  grainstore:stats
+  {:doc "Show grainstore statistics"
+   :task (shell "bb" "scripts/grainstore-stats.bb")}
+  
+  ;; Grainbarrel installation
+  install
+  {:doc "Install gb command to ~/.local/bin"
+   :requires ([babashka.fs :as fs])
+   :task (do
+           (println "🌾 Installing Grainbarrel (gb)...\n")
+           (let [source "bin/gb"
+                 target (str (System/getenv "HOME") "/.local/bin/gb")]
+             (fs/create-dirs (str (System/getenv "HOME") "/.local/bin"))
+             (fs/copy source target {:replace-existing true})
+             (fs/set-posix-file-permissions target "rwxr-xr-x")
+             (println (str "✅ Installed: " target))
+             (println "\nTest it:")
+             (println "  gb --version")
+             (println "  gb help")))}
+  
+  test
+  {:doc "Run tests"
+   :task (println "🌾 No tests yet!")}}}
+
