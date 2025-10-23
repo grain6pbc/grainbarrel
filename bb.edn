@@ -249,5 +249,67 @@ qb-vegan-flow
   
   test
   {:doc "Run tests"
-   :task (println "🌾 No tests yet!")}}}
+   :task (println "🌾 No tests yet!")}
+  
+  ;; Grainlexicon - Synonym Resolver System
+  grainlexicon
+  {:doc "Display grainlexicon synonym mappings"
+   :requires ([babashka.process :refer [shell]])
+   :task (shell "bb" "-e" "(load-file \"scripts/grainlexicon-synonyms.bb\") (print-lexicon)")}
+  
+  qb-course-sync-system-new
+  {:doc "Create new course with QB course sync system (usage: bb qb course sync system new [course-name])"
+   :requires ([babashka.process :refer [shell]])
+   :task (apply shell "bb" "../grainpbc/qb/scripts/course-sync-personal.bb" *command-line-args*)}
+  
+  qb-demo-sync-system-new
+  {:doc "Alias for qb-course-sync-system-new - create new demo course"
+   :requires ([babashka.process :refer [shell]])
+   :task (apply shell "bb" "../grainpbc/qb/scripts/course-sync-personal.bb" *command-line-args*)}
+  
+  qb-kk
+  {:doc "QB KK - Print PSEUDO.md as grainbook of graincards (kk = continue!)"
+   :requires ([babashka.process :refer [shell]])
+   :task (shell "bb" "scripts/qb-kk-grainbook.bb")}
+  
+  qb-sync
+  {:doc "QB SYNC - Synonym for qb-kk, displays PSEUDO.md grainbook for Cursor TODO sync"
+   :requires ([babashka.process :refer [shell]])
+   :task (do
+           (println "")
+           (println "╔══════════════════════════════════════════════════════════════════════════════╗")
+           (println "║                                                                              ║")
+           (println "║                   🌾 QB SYNC - CURSOR TODO SYNC 🌾                          ║")
+           (println "║                                                                              ║")
+           (println "║              Synchronizing PSEUDO.md with Cursor TODOs                      ║")
+           (println "║                                                                              ║")
+           (println "╚══════════════════════════════════════════════════════════════════════════════╝")
+           (println "")
+           (println "💡 HOW TO SYNC WITH CURSOR TODO LIST:")
+           (println "")
+           (println "1. Read the grainbook cards below")
+           (println "2. Each PSEUDO.md section can become a Cursor TODO")
+           (println "3. Use Cursor's todo_write tool to create/update TODOs")
+           (println "4. Match graincard sections to TODO items")
+           (println "5. Keep aspirational vision synced with actionable tasks")
+           (println "")
+           (println "🌾 GRAINBOOK FOLLOWS:")
+           (println "═══════════════════════════════════════════════════════════════════════════════")
+           (println "")
+           (shell "bb" "scripts/qb-kk-grainbook.bb"))}
+  
+  plz
+  {:doc "PLZ - Trish's Voice: Feminine, witty, constructive-critical, teasing young rebel artsy flowery AI persona"
+   :requires ([babashka.process :refer [shell]])
+   :task (shell "bb" "scripts/plz-trish.bb")}
+  
+  plz-solar
+  {:doc "PLZ SOLAR - tri5h explains the solar house clock system (CORRECT understanding!)"
+   :requires ([babashka.process :refer [shell]])
+   :task (shell "bb" "scripts/plz-trish-SOLAR-HOUSE-EDUCATION.bb")}
+  
+  qb-path-flow-cleaning-re
+  {:doc "QB Path Flow Cleaning Re - Clean, rebase, and flow graintime branches"
+   :requires ([babashka.process :refer [shell]])
+   :task (apply shell "bb" "scripts/qb-path-flow-cleaning-re.bb" *command-line-args*)}}}
 
