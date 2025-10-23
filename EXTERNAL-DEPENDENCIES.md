@@ -19,7 +19,7 @@ These are external dependencies that Grain Network modules depend on.
 - **GitHub**: https://github.com/babashka/babashka
 - **Website**: https://babashka.org
 - **Binary**: `bb`
-- **Install**: https://raw.githubusercontent.com/babashka/babashka/master/install
+- **Install**: https://raw.githubusercontent.com/babashka/babashka/primary/install
 
 
 ### humbleui

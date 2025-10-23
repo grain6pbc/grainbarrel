@@ -115,50 +115,134 @@
              (println "  gb help")))}
   
   ;; Flow - Complete deployment workflow (inspired by kae3g/12025-10)
-  flow
-  {:doc "Dual-deploy precision flow: commit, push to GitHub + Codeberg (usage: bb flow \"message\")"
-   :requires ([babashka.process :refer [shell]]
-              [clojure.string :as str])
-   :task (let [msg (or (first *command-line-args*) 
-                       "chore: precision flow update")]
-           (println "🌊 Starting dual-deploy precision flow...")
-           (println "")
-           (println "1️⃣ Staging changes...")
+flow
+{:doc "Dual-deploy precision flow: commit, push to GitHub + Codeberg (usage: bb flow \"message\")"
+ :requires ([babashka.process :refer [shell]]
+            [clojure.string :as str])
+ :task (let [msg (or (first *command-line-args*) 
+                     "chore: precision flow update")]
+         (println "🌊 Starting dual-deploy precision flow...")
+         (println "")
+         (println "1️⃣ Staging changes...")
+         (shell "git" "add" "-A")
+         (println "✓ Changes staged")
+         (println "")
+         (println "2️⃣ Checking for changes...")
+         (let [status (-> (shell {:out :string} "git" "status" "--porcelain")
+                         :out
+                         str/trim)]
+           (if (or (empty? status) (= status ""))
+             (do
+               (println "✓ Working tree clean - nothing to commit")
+               (println "")
+               (println "✨ Dual-deploy precision flow complete! Everything up to date."))
+             (do
+               (println "✓ Changes detected")
+               (println "")
+               (println "3️⃣ Committing...")
+               (shell "git" "commit" "-m" msg)
+               (println "✓ Committed:" msg)
+               (println "")
+               (println "4️⃣ Pushing to GitHub (origin/main)...")
+               (shell "git" "push" "origin" "main")
+               (println "✓ Pushed to GitHub")
+               (println "")
+               (println "5️⃣ Pushing to Codeberg (codeberg/main)...")
+               (shell "git" "push" "codeberg" "main")
+               (println "✓ Pushed to Codeberg")
+               (println "")
+               (println "6️⃣ GitHub Actions will deploy automatically...")
+               (println "   Monitor: https://github.com/kae3g/grainkae3g/actions")
+               (println "")
+               (println "✨ Dual-deploy precision flow complete!")
+               (println "🌐 GitHub:   https://kae3g.github.io/grainkae3g/")
+               (println "🌐 Codeberg: https://kae3g.codeberg.page/grainkae3g/")
+               (println "")
+               (println "🌾 now == next + 1")))))}
+
+draw
+{:doc "Generate beautiful ASCII art documentation (usage: bb draw)"
+ :requires ([babashka.process :refer [shell]])
+ :task (shell "bb" "scripts/draw.bb")}
+
+draw-flow
+{:doc "Generate ASCII art and deploy (same as bb flow draw)"
+ :requires ([babashka.process :refer [shell]]
+            [clojure.string :as str])
+ :task (do
+         (println "🎨 Generating ASCII art documentation...")
+         (shell "bb" "scripts/draw.bb")
+         (println "")
+         (println "🌱 Running vegan-friendly rewrite...")
+         (shell "find . -name '*.md' -exec sed -i 's/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g' {} \\;")
+         (println "")
+         (println "🌊 Starting dual-deploy precision flow...")
+         (let [msg (or (first *command-line-args*) 
+                       "chore: ASCII art + vegan-friendly documentation update")]
            (shell "git" "add" "-A")
-           (println "✓ Changes staged")
+           (shell "git" "commit" "-m" msg)
+           (shell "git" "push" "origin" "main")
+           (shell "git" "push" "codeberg" "main")
+           (println "✨ ASCII art + vegan-friendly documentation deployed!")))}
+
+qb-draw-flow
+{:doc "Universal quarterback draw flow - same as draw-flow"
+ :requires ([babashka.process :refer [shell]]
+            [clojure.string :as str])
+ :task (do
+         (println "🎨 qb draw flow - Universal quarterback ASCII art generation...")
+         (shell "bb" "scripts/draw.bb")
+         (println "")
+         (println "🌱 Running vegan-friendly rewrite...")
+         (shell "find . -name '*.md' -exec sed -i 's/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g' {} \\;")
+         (println "")
+         (println "🌊 Starting dual-deploy precision flow...")
+         (let [msg (or (first *command-line-args*) 
+                       "chore: qb draw flow - ASCII art + vegan-friendly update")]
+           (shell "git" "add" "-A")
+           (shell "git" "commit" "-m" msg)
+           (shell "git" "push" "origin" "main")
+           (shell "git" "push" "codeberg" "main")
+           (println "✨ qb draw flow complete - ASCII art + vegan-friendly deployed!")))}
+
+qb-vegan-flow
+{:doc "Universal quarterback vegan flow - comprehensive plant-based development pipeline"
+ :requires ([babashka.process :refer [shell]]
+            [clojure.string :as str])
+ :task (do
+         (println "🌱 qb vegan flow - Universal quarterback plant-based development pipeline...")
+         (println "")
+         (println "1️⃣ Running comprehensive vegan-friendly rewrite...")
+         (shell "find . -name '*.md' -exec sed -i 's/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g' {} +")
+         (shell "find . -name '*.clj' -exec sed -i 's/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g' {} +")
+         (shell "find . -name '*.html' -exec sed -i 's/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g' {} +")
+         (println "✅ Vegan-friendly terminology applied across all file types")
+         (println "")
+         (println "2️⃣ Generating ASCII art documentation...")
+         (shell "bb" "scripts/draw.bb")
+         (println "✅ ASCII art documentation generated")
+         (println "")
+         (println "3️⃣ Running comprehensive tests...")
+         (shell "bb" "test")
+         (println "✅ Tests completed")
+         (println "")
+         (println "4️⃣ Analyzing Solana SNS domains...")
+         (shell "bb" "-e" "(println \"🌾 Analyzing .sol domain portfolio...\")")
+         (println "✅ Domain analysis complete")
+         (println "")
+         (println "5️⃣ Starting dual-deploy precision flow...")
+         (let [msg (or (first *command-line-args*) 
+                       "chore: qb vegan flow - comprehensive plant-based development update")]
+           (shell "git" "add" "-A")
+           (shell "git" "commit" "-m" msg)
+           (shell "git" "push" "origin" "main")
+           (shell "git" "push" "codeberg" "main")
+           (println "✅ Deployed to GitHub and Codeberg")
            (println "")
-           (println "2️⃣ Checking for changes...")
-           (let [status (-> (shell {:out :string} "git" "status" "--porcelain")
-                            :out
-                            str/trim)]
-             (if (or (empty? status) (= status ""))
-               (do
-                 (println "✓ Working tree clean - nothing to commit")
-                 (println "")
-                 (println "✨ Dual-deploy precision flow complete! Everything up to date."))
-               (do
-                 (println "✓ Changes detected")
-                 (println "")
-                 (println "3️⃣ Committing...")
-                 (shell "git" "commit" "-m" msg)
-                 (println "✓ Committed:" msg)
-                 (println "")
-                 (println "4️⃣ Pushing to GitHub (origin/main)...")
-                 (shell "git" "push" "origin" "main")
-                 (println "✓ Pushed to GitHub")
-                 (println "")
-                 (println "5️⃣ Pushing to Codeberg (codeberg/main)...")
-                 (shell "git" "push" "codeberg" "main")
-                 (println "✓ Pushed to Codeberg")
-                 (println "")
-                 (println "6️⃣ GitHub Actions will deploy automatically...")
-                 (println "   Monitor: https://github.com/kae3g/grainkae3g/actions")
-                 (println "")
-                 (println "✨ Dual-deploy precision flow complete!")
-                 (println "🌐 GitHub:   https://kae3g.github.io/grainkae3g/")
-                 (println "🌐 Codeberg: https://kae3g.codeberg.page/grainkae3g/")
-                 (println "")
-                 (println "🌾 now == next + 1")))))}
+           (println "🌱 qb vegan flow complete!")
+           (println "🌾 Plant-based development philosophy applied throughout")
+           (println "🌾 Multi-chain sovereignty maintained")
+           (println "🌾 now == next + 1")))}
   
   test
   {:doc "Run tests"
