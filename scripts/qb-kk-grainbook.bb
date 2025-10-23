@@ -80,10 +80,10 @@
 
 (defn find-pseudo-file []
   "Find PSEUDO.md in the repository"
-  (let [possible-paths ["docs/core/philosophy/PSEUDO.md"
+  (let [possible-paths ["../../docs/core/philosophy/PSEUDO.md"
+                        "docs/core/philosophy/PSEUDO.md"
                         "docs/PSEUDO.md"
-                        "PSEUDO.md"
-                        "../../../docs/core/philosophy/PSEUDO.md"]]
+                        "PSEUDO.md"]]
     (some #(when (.exists (io/file %)) %) possible-paths)))
 
 (defn main []
