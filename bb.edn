@@ -185,25 +185,28 @@ draw-flow
            (shell "git" "push" "codeberg" "main")
            (println "✨ ASCII art + vegan-friendly documentation deployed!")))}
 
-qb-draw-flow
-{:doc "Universal quarterback draw flow - same as draw-flow"
- :requires ([babashka.process :refer [shell]]
-            [clojure.string :as str])
- :task (do
-         (println "🎨 qb draw flow - Universal quarterback ASCII art generation...")
-         (shell "bb" "scripts/draw.bb")
-         (println "")
-         (println "🌱 Running vegan-friendly rewrite...")
-         (shell "find . -name '*.md' -exec sed -i 's/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g' {} \\;")
-         (println "")
-         (println "🌊 Starting dual-deploy precision flow...")
-         (let [msg (or (first *command-line-args*) 
-                       "chore: qb draw flow - ASCII art + vegan-friendly update")]
-           (shell "git" "add" "-A")
-           (shell "git" "commit" "-m" msg)
-           (shell "git" "push" "origin" "main")
-           (shell "git" "push" "codeberg" "main")
-           (println "✨ qb draw flow complete - ASCII art + vegan-friendly deployed!")))}
+   qb-draw-flow
+   {:doc "Universal quarterback draw flow - same as draw-flow"
+    :requires ([babashka.process :refer [shell]]
+               [clojure.string :as str])
+    :task (do
+            (println "🎨 qb draw flow - Universal quarterback ASCII art generation...")
+            (shell "bb" "scripts/draw.bb")
+            (println "")
+            (println "🌱 Running vegan-friendly rewrite...")
+            (shell "find" "." "-name" "*.md" "-exec" "sed" "-i" "s/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g; s/eggs/seeds/g; s/omelette/frittata/g" "{}" "+")
+            (shell "find" "." "-name" "*.clj" "-exec" "sed" "-i" "s/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g; s/eggs/seeds/g; s/omelette/frittata/g" "{}" "+")
+            (shell "find" "." "-name" "*.html" "-exec" "sed" "-i" "s/master/primary/g; s/slave/secondary/g; s/blacklist/blocklist/g; s/whitelist/allowlist/g; s/eggs/seeds/g; s/omelette/frittata/g" "{}" "+")
+            (println "✅ Vegan-friendly terminology applied")
+            (println "")
+            (println "🌊 Starting dual-deploy precision flow...")
+            (let [msg (or (first *command-line-args*) 
+                          "chore: qb draw flow - ASCII art + vegan-friendly update")]
+              (shell "git" "add" "-A")
+              (shell "git" "commit" "-m" msg)
+              (shell "git" "push" "origin" "main")
+              (shell "git" "push" "codeberg" "main")
+              (println "✨ qb draw flow complete - ASCII art + vegan-friendly deployed!")))}
 
 qb-vegan-flow
 {:doc "Universal quarterback vegan flow - comprehensive plant-based development pipeline"
