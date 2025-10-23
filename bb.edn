@@ -311,5 +311,10 @@ qb-vegan-flow
   qb-path-flow-cleaning-re
   {:doc "QB Path Flow Cleaning Re - Clean, rebase, and flow graintime branches"
    :requires ([babashka.process :refer [shell]])
-   :task (apply shell "bb" "scripts/qb-path-flow-cleaning-re.bb" *command-line-args*)}}}
+   :task (apply shell "bb" "scripts/qb-path-flow-cleaning-re.bb" *command-line-args*)}
+
+  qb-now
+  {:doc "QB NOW - Ultimate intelligent quarterback (code-supernova-1-million MAX mode)"
+   :requires ([babashka.process :refer [shell]])
+   :task (apply shell "bb" "../grainpbc/qb-now/scripts/qb-now.bb" *command-line-args*)}}}
 
