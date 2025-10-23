@@ -1,7 +1,11 @@
-{:paths ["src" "scripts"]
+{:paths ["src" "scripts" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/grainsync/src" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/graintime/src" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/graincourse/src" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/graincourse-sync/src" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/grainconfig/src" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/grainclay/src"]
  
  :deps
- {org.clojure/clojure {:mvn/version "1.11.1"}}
+ {org.clojure/clojure {:mvn/version "1.11.1"}
+  babashka.fs {:mvn/version "0.3.4"}
+  clj-http {:mvn/version "3.12.3"}
+  clj-time {:mvn/version "0.15.2"}
+  java-time {:mvn/version "0.3.3"}}
  
  :tasks
  {;; Grainstore Management
@@ -26,6 +30,74 @@
   {:doc "Show grainstore statistics"
    :task (shell "bb" "scripts/grainstore-stats.bb")}
   
+  ;; Grainsync Course Management
+  grainsync:course:new
+  {:doc "Create new graincourse with auto-generated graintime and grainpath"
+   :task (shell "bb" "scripts/grainsync-course-new.bb")}
+  
+  grainsync:course:sync
+  {:doc "Sync existing graincourse to grainkae3g pages"
+   :task (shell "bb" "-e" "(require 'grainsync.course) (grainsync.course/sync-course!)")}
+  
+  grainsync:course:list
+  {:doc "List all available graincourses"
+   :task (shell "bb" "-e" "(require 'grainsync.course) (grainsync.course/list-courses)")}
+  
+  grainsync:github:update-description
+  {:doc "Update GitHub repository description with Pages URL"
+   :task (shell "bb" "-e" "(require 'grainsync.github) (grainsync.github/update-repo-description!)")}
+  
+        ;; Grainconfig Management
+        config:show
+        {:doc "Show current configuration for all modules"
+         :task (shell "bb" "-e" "(require 'grainconfig.core) (grainconfig.core/show-config)")}
+        
+        ;; GitHub Setup
+        github:setup-token
+        {:doc "Setup GitHub token for repository description updates"
+         :task (shell "bb" "scripts/setup-github-token.bb")}
+        
+        github:test-description
+        {:doc "Test updating GitHub repository description with existing course"
+         :task (shell "bb" "scripts/test-github-description.bb")}
+        
+        ;; Grainclay Flow Commands
+        grainclay:flow
+        {:doc "Complete grainclay workflow: create, publish, distribute, sync"
+         :task (shell "bb" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/grainclay/scripts/grainclay-flow.bb")}
+        
+        grainclay:content:create
+        {:doc "Create new content with grainclay structure"
+         :task (shell "bb" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/grainclay/scripts/grainclay-create.bb")}
+        
+        grainclay:config:show
+        {:doc "Show current grainclay configuration"
+         :task (shell "bb" "-e" "(load-file \"/home/xy/kae3g/grainkae3g/grainstore/grainpbc/grainclay/src/grainclay/config.clj\") (require '[grainclay.config :as config]) (config/show-config)")}
+        
+        grainclay:config:update
+        {:doc "Update grainclay configuration"
+         :task (shell "bb" "/home/xy/kae3g/grainkae3g/grainstore/grainpbc/grainclay/scripts/grainclay-config-update.bb")}
+  
+  config:update
+  {:doc "Update configuration for a specific module"
+   :task (shell "bb" "-e" "(require 'grainconfig.core) (grainconfig.core/update-config!)")}
+  
+  config:reset
+  {:doc "Reset configuration to defaults"
+   :task (shell "bb" "-e" "(require 'grainconfig.core) (grainconfig.core/reset-config!)")}
+  
+  config:validate
+  {:doc "Validate current configuration"
+   :task (shell "bb" "-e" "(require 'grainconfig.core) (grainconfig.core/validate-config)")}
+  
+  grainsync:config:update
+  {:doc "Update grainsync module configuration"
+   :task (shell "bb" "scripts/grainconfig-grainsync.bb")}
+  
+  graintime:config:update
+  {:doc "Update graintime module configuration"
+   :task (shell "bb" "scripts/grainconfig-graintime.bb")}
+  
   ;; Grainbarrel installation
   install
   {:doc "Install gb command to ~/.local/bin"
@@ -41,6 +113,52 @@
              (println "\nTest it:")
              (println "  gb --version")
              (println "  gb help")))}
+  
+  ;; Flow - Complete deployment workflow (inspired by kae3g/12025-10)
+  flow
+  {:doc "Dual-deploy precision flow: commit, push to GitHub + Codeberg (usage: bb flow \"message\")"
+   :requires ([babashka.process :refer [shell]]
+              [clojure.string :as str])
+   :task (let [msg (or (first *command-line-args*) 
+                       "chore: precision flow update")]
+           (println "🌊 Starting dual-deploy precision flow...")
+           (println "")
+           (println "1️⃣ Staging changes...")
+           (shell "git" "add" "-A")
+           (println "✓ Changes staged")
+           (println "")
+           (println "2️⃣ Checking for changes...")
+           (let [status (-> (shell {:out :string} "git" "status" "--porcelain")
+                            :out
+                            str/trim)]
+             (if (empty? status)
+               (do
+                 (println "✓ Working tree clean - nothing to commit")
+                 (println "")
+                 (println "✨ Dual-deploy precision flow complete! Everything up to date."))
+               (do
+                 (println "✓ Changes detected")
+                 (println "")
+                 (println "3️⃣ Committing...")
+                 (shell "git" "commit" "-m" msg)
+                 (println "✓ Committed:" msg)
+                 (println "")
+                 (println "4️⃣ Pushing to GitHub (origin/main)...")
+                 (shell "git" "push" "origin" "main")
+                 (println "✓ Pushed to GitHub")
+                 (println "")
+                 (println "5️⃣ Pushing to Codeberg (codeberg/main)...")
+                 (shell "git" "push" "codeberg" "main")
+                 (println "✓ Pushed to Codeberg")
+                 (println "")
+                 (println "6️⃣ GitHub Actions will deploy automatically...")
+                 (println "   Monitor: https://github.com/kae3g/grainkae3g/actions")
+                 (println "")
+                 (println "✨ Dual-deploy precision flow complete!")
+                 (println "🌐 GitHub:   https://kae3g.github.io/grainkae3g/")
+                 (println "🌐 Codeberg: https://kae3g.codeberg.page/grainkae3g/")
+                 (println "")
+                 (println "🌾 now == next + 1")))))}
   
   test
   {:doc "Run tests"
