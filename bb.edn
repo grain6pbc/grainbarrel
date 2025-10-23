@@ -131,7 +131,7 @@
            (let [status (-> (shell {:out :string} "git" "status" "--porcelain")
                             :out
                             str/trim)]
-             (if (empty? status)
+             (if (or (empty? status) (= status ""))
                (do
                  (println "✓ Working tree clean - nothing to commit")
                  (println "")
