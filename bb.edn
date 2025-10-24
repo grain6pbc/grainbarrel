@@ -353,8 +353,29 @@ qb-vegan-flow
    :requires ([babashka.process :refer [shell]])
    :task (shell "scripts/qb-shot.sh")}
 
- kae3g-chat
- {:doc "KAE3G CHAT - Cursor-style chat interface in zellij pane"
-  :requires ([babashka.process :refer [shell]])
-  :task (shell "scripts/kae3g-chat.bb")}}}
+kae3g-chat
+{:doc "KAE3G CHAT - Cursor-style chat interface in zellij pane"
+ :requires ([babashka.process :refer [shell]])
+ :task (shell "scripts/kae3g-chat.bb")}
+
+;; Graindaemon Tasks
+graindaemon:github-description-sync
+{:doc "Graindaemon: Update GitHub repository description with grainsite URL"
+ :requires ([babashka.process :refer [shell]])
+ :task (shell "bb" "../graindaemon/src/graindaemon/github-description-sync.bb")}
+
+graindaemon:humble-sync
+{:doc "Graindaemon: Sync Humble Stack files between Alpine VM and Ubuntu host"
+ :requires ([babashka.process :refer [shell]])
+ :task (shell "bb" "../graindaemon/src/graindaemon/humble-sync.bb")}
+
+graindaemon:grainbranch-manager
+{:doc "Graindaemon: Manage grainbranches across all grain6pbc repositories"
+ :requires ([babashka.process :refer [shell]])
+ :task (shell "bb" "../graindaemon/src/graindaemon/grainbranch-manager.bb")}
+
+graindaemon:sync-all-repos
+{:doc "Graindaemon: Sync all grain6pbc repositories with grainbranches"
+ :requires ([babashka.process :refer [shell]])
+ :task (shell "bb" "../graindaemon/src/graindaemon/grainbranch-manager.bb")}}}
 
