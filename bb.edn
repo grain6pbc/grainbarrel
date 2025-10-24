@@ -323,10 +323,15 @@ qb-vegan-flow
    :requires ([babashka.process :refer [shell]])
    :task (shell "bb" "scripts/plz-trish.bb")}
 
-  grainai-vocab
-  {:doc "GRAINAI-VOCAB - Vocabulary guidelines for AI personas (Chelsea Diane + Indiana Jones style)"
-   :requires ([babashka.process :refer [shell]])
-   :task (shell "bb" "scripts/grainai-vocab-guidelines.bb")}
+ grainai-vocab
+ {:doc "GRAINAI-VOCAB - Vocabulary guidelines for AI personas (Chelsea Diane + Indiana Jones style)"
+  :requires ([babashka.process :refer [shell]])
+  :task (shell "bb" "scripts/grainai-vocab-guidelines.bb")}
+ 
+ n
+ {:doc "N KG GO - Next action intelligence: What's next? glO0w tells you, then GO!"
+  :requires ([babashka.process :refer [shell]])
+  :task (shell "bb" "scripts/n-kg-go.bb")}
   
   qb-path-flow-cleaning-re
   {:doc "QB Path Flow Cleaning Re - Clean, rebase, and flow graintime branches"
