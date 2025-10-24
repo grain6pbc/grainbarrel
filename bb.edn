@@ -341,5 +341,15 @@ qb-vegan-flow
   qb-now
   {:doc "QB NOW - Ultimate intelligent quarterback (code-supernova-1-million MAX mode)"
    :requires ([babashka.process :refer [shell]])
-   :task (apply shell "bb" "../grainpbc/qb-now/scripts/qb-now.bb" *command-line-args*)}}}
+   :task (apply shell "bb" "../grainpbc/qb-now/scripts/qb-now.bb" *command-line-args*)}
+
+  qb-shot
+  {:doc "QB SHOT - Find latest VM screenshot for Cursor context (use qb-shot-clean to organize root screenshots)"
+   :requires ([babashka.process :refer [shell]])
+   :task (shell "scripts/qb-shot.sh")}
+
+  qb-shot-clean
+  {:doc "QB SHOT CLEAN - Move root screenshots to screenshots folder"
+   :requires ([babashka.process :refer [shell]])
+   :task (shell "scripts/qb-shot-clean.sh")}}}
 
