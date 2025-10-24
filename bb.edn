@@ -332,6 +332,11 @@ qb-vegan-flow
  {:doc "N KG GO - Next action intelligence: What's next? glO0w tells you, then GO!"
   :requires ([babashka.process :refer [shell]])
   :task (shell "bb" "scripts/n-kg-go.bb")}
+
+ k
+ {:doc "K NG GO - Same as 'n kg go' - Next action intelligence: What's next? glO0w tells you, then GO!"
+  :requires ([babashka.process :refer [shell]])
+  :task (shell "bb" "scripts/n-kg-go.bb")}
   
   qb-path-flow-cleaning-re
   {:doc "QB Path Flow Cleaning Re - Clean, rebase, and flow graintime branches"
@@ -348,8 +353,8 @@ qb-vegan-flow
    :requires ([babashka.process :refer [shell]])
    :task (shell "scripts/qb-shot.sh")}
 
-  qb-shot-clean
-  {:doc "QB SHOT CLEAN - Move root screenshots to screenshots folder"
-   :requires ([babashka.process :refer [shell]])
-   :task (shell "scripts/qb-shot-clean.sh")}}}
+ kae3g-chat
+ {:doc "KAE3G CHAT - Cursor-style chat interface in zellij pane"
+  :requires ([babashka.process :refer [shell]])
+  :task (shell "scripts/kae3g-chat.bb")}}}
 
